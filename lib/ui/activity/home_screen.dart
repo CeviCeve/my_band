@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_band/ui/element/custom_button.dart';
+import 'package:my_band/ui/element/custom_button_large.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

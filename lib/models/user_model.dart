@@ -5,7 +5,7 @@ import 'package:my_band/models/instrument_model.dart';
 import 'package:my_band/models/location_model.dart';
 import 'package:my_band/models/proficiency_level_model.dart';
 
-//part 'user_model.g.dart';
+part 'user_model.g.dart';
 
 // Класс пользователя
 @Collection()

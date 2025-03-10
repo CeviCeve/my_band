@@ -2,7 +2,7 @@ import 'package:isar/isar.dart';
 import 'package:my_band/enum/instruments.dart';
 import 'package:my_band/enum/proficiency.dart';
 
-//part 'instrument_model.g.dart';
+part 'instrument_model.g.dart';
 
 @Embedded()
 class Instrument {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_band/ui/activity/favorite_screen.dart';
 import 'package:my_band/ui/activity/home_screen.dart';
+import 'package:my_band/ui/activity/profile_screen.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   const CustomBottomNavBar({super.key});
@@ -16,7 +17,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
   static final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     FavoriteScreen(),
-    Text("ерукв"),
+    ProfileScreen(),
   ];
 
   void selectTab(int index) {
