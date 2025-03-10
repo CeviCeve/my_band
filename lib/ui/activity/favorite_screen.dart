@@ -13,38 +13,36 @@ class FavoriteScreen extends StatelessWidget {
       body: Column(
         children: [
           SearchElement(controller: TextEditingController()),
-
-          /// Список карточек с размытым фоном внутри
           Expanded(
             child: ListView.builder(
               itemCount: 10,
               itemBuilder:
-                  (context, index) => Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
-                    child: ClipRRect(
+                  (context, index) => ClipRRect(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                       child: Stack(
                         children: [
-                          /// Фоновая картинка внутри карточки
                           Positioned.fill(
                             child: Image.asset(
                               'assets/forest.png',
-                              fit: BoxFit.fitWidth,
+                              fit: BoxFit.cover,
                             ),
                           ),
 
-                          /// Размытие только внутри карточки
                           Positioned.fill(
                             child: BackdropFilter(
                               filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
                               child: Container(
-                                color: Colors.black26.withAlpha(20),
+                                color: Colors.black.withAlpha(50),
                               ),
                             ),
                           ),
 
-                          // Контент карточки
-                          SizedBox(
-                            height: 111,
+                          Container(
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                             child: Row(
                               children: [
                                 CircleAvatar(
@@ -54,33 +52,82 @@ class FavoriteScreen extends StatelessWidget {
                                   ),
                                   radius: 34,
                                 ),
-                                Card(
-                                  child: Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+
+                                Expanded(
+                                  child: Card(
+                                    elevation: 4,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    color: Colors.black,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(12),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Text(
-                                            "Имя Фамилия $index",
-                                            style: GoogleFonts.montserrat(
-                                              color: Color.fromARGB(
-                                                255,
-                                                230,
-                                                255,
-                                                6,
+                                          /// Имя + возраст
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Имя Фамилия $index",
+                                                style: GoogleFonts.montserrat(
+                                                  color: Colors.white,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
+                                              Text(
+                                                "25 лет",
+                                                style: GoogleFonts.montserrat(
+                                                  color: Colors.grey[400],
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          Text(
+                                            "Локация",
+                                            style: GoogleFonts.montserrat(
+                                              color: Colors.grey[400],
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
                                             ),
                                           ),
-                                          Text("25 Лет"),
+
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                              0,
+                                              12,
+                                              0,
+                                              0,
+                                            ),
+                                            child: Text(
+                                              "В поиске",
+                                              style: GoogleFonts.montserrat(
+                                                color: Colors.grey[400],
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                              ),
+                                            ),
+                                          ),
+
+                                          /// Инструменты
+                                          Text(
+                                            "Инструмент(ы)",
+                                            style: GoogleFonts.montserrat(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
                                         ],
                                       ),
-                                      Text("Локация"),
-                                      Text("В поиске"),
-                                      Text("инструмент(ы)"),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               ],
