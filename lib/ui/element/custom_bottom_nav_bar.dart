@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_band/ui/activity/favorite_screen.dart';
 import 'package:my_band/ui/activity/home_screen.dart';
-import 'package:my_band/ui/element/search_element.dart';
 
 class CustomBottomNavBar extends StatefulWidget {
   const CustomBottomNavBar({super.key});
@@ -15,7 +15,7 @@ class _CustomBottomNavBarState extends State<CustomBottomNavBar> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
-    Scaffold(body: SearchElement(controller: TextEditingController())),
+    FavoriteScreen(),
     Text("ерукв"),
   ];
 
