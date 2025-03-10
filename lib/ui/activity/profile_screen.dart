@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_band/models/user_model.dart';
 import 'package:my_band/ui/element/custom_button_large.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final User? user;
+  const ProfileScreen({super.key, this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -13,9 +15,8 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Stack(
               children: [
-                // Фоновое изображение
                 Container(
-                  height: 180,
+                  height: 111,
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/forest.png'),
@@ -25,80 +26,125 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 Positioned(
                   top: 16,
-                  right: 16,
-                  child: Icon(Icons.image, color: Colors.white),
+                  right: 12,
+                  child: Card(
+                    color: const Color.fromARGB(255, 21, 21, 184),
+                    child: SizedBox(
+                      height: 29,
+                      width: 29,
+                      child: Icon(
+                        Icons.image_outlined,
+                        color: Colors.white,
+                        size: 19,
+                      ),
+                    ),
+                  ),
                 ),
                 Positioned(
-                  bottom: -30,
+                  bottom: 0,
                   left: 16,
                   child: CircleAvatar(
-                    radius: 40,
-                    backgroundImage: AssetImage('assets/profile.jpg'),
+                    radius: 64,
+                    backgroundColor: Colors.black,
+                    backgroundImage: AssetImage('assets/emma.png'),
                   ),
                 ),
+                Positioned(bottom: 30, right: 18, child: Icon(Icons.edit)),
+                SizedBox(height: 171),
               ],
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 40),
-                  Text(
-                    "Эмма Уотсон",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 17, 16, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${user?.name ?? "ЭЭмма"} ${user?.surname ?? "Уотсон"}",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Text(
+                        user?.location?.getLocation ?? "Неопознаная локация",
+                        style: GoogleFonts.montserrat(
+                          fontSize: 12,
+                          color: Colors.grey[400],
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    "Минск, Ленинский р-н",
-                    style: GoogleFonts.montserrat(
-                      fontSize: 14,
-                      color: Colors.grey[400],
-                    ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                  child: Column(
+                    children: [
+                      _buildInfoRow(
+                        "Музыкальное образование:",
+                        user?.education ?? "отсутствует",
+                      ),
+                      _buildInfoRow("Статус:", user?.status ?? "-"),
+                      _buildInfoRow(
+                        "Дата рождения:",
+                        "${user?.dob?.day != null ? "${user?.dob?.day}." : "не"}"
+                            "${user?.dob?.month != null ? "${user?.dob?.month}." : " заполненное"}"
+                            "${user?.dob?.day ?? " поле"}",
+                      ),
+                      _buildInfoRow(
+                        "Любимая группа:",
+                        user?.likeBand ?? "Metallica",
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  _buildInfoRow("Музыкальное образование:", "самоучка"),
-                  _buildInfoRow("Статус:", "в активном поиске"),
-                  _buildInfoRow("Дата рождения:", "18.11.2000"),
-                  _buildInfoRow("Любимая группа:", "Metallica"),
-                  const SizedBox(height: 12),
-                  Container(
-                    color: const Color.fromARGB(255, 28, 28, 38),
+                ),
+
+                Container(
+                  color: const Color.fromARGB(255, 28, 28, 38),
+                  child: SizedBox(
+                    width: double.infinity,
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "О себе",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 4, 0, 0),
+                          child: Text(
+                            "О себе",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                        Text(
-                          "Привет! Я музыкант с 5-летним опытом. Люблю экспериментировать со звуком.",
-                          style: GoogleFonts.montserrat(
-                            fontSize: 14,
-                            color: Colors.grey[400],
+
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
+                          child: Text(
+                            user?.about ?? "Не описано\n...",
+                            style: GoogleFonts.montserrat(
+                              fontSize: 12,
+                              color: Colors.grey[400],
+                            ),
                           ),
                         ),
                       ],
                     ),
                   ),
+                ),
 
-                  CustomButton(
-                    text: "Мои инструменты",
-                    textSize: 12,
-                    heigth: 20,
-                  ),
-                  CustomButton(text: "Мои группы", textSize: 12, heigth: 20),
-                  CustomButton(text: "Мои контакты", textSize: 12, heigth: 20),
-                  const SizedBox(height: 12),
-                  _buildProficiencyCard(),
-                ],
-              ),
+                CustomButton(text: "Мои инструменты", textSize: 12, heigth: 20),
+                CustomButton(text: "Мои группы", textSize: 12, heigth: 20),
+                CustomButton(text: "Мои контакты", textSize: 12, heigth: 20),
+
+                _buildProficiencyCard(),
+              ],
             ),
           ],
         ),
@@ -114,33 +160,16 @@ class ProfileScreen extends StatelessWidget {
         children: [
           Text(
             title,
-            style: GoogleFonts.montserrat(
-              fontSize: 14,
-              color: Colors.grey[400],
-            ),
+            style: GoogleFonts.montserrat(fontSize: 12, color: Colors.white),
           ),
           Text(
             value,
-            style: GoogleFonts.montserrat(fontSize: 14, color: Colors.white),
+            style: GoogleFonts.montserrat(
+              fontSize: 12,
+              color: const Color.fromARGB(255, 158, 158, 184),
+            ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildMenuButton(String text) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 28, 28, 38),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        title: Text(
-          text,
-          style: GoogleFonts.montserrat(color: Colors.white, fontSize: 14),
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.white),
       ),
     );
   }
@@ -163,10 +192,10 @@ class ProfileScreen extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          const SizedBox(height: 8),
+
           _buildInfoRow("Электрогитара:", "средний"),
           _buildInfoRow("Бас-гитара:", "высокий"),
-          const SizedBox(height: 8),
+
           Align(
             alignment: Alignment.center,
             child: IconButton(
