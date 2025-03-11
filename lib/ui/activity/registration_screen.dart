@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_band/servise/date_validator.dart';
+import 'package:my_band/ui/element/custom_blue_button.dart';
 import 'package:my_band/ui/element/custom_textfield.dart';
 
 class RegistrationScreen extends StatefulWidget {
@@ -140,8 +141,21 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ],
         ),
         const SizedBox(height: 24),
-        // Кнопка "Далее"
-        ElevatedButton(
+
+        CustomBlueButton(
+          text: "Далее",
+          backgroundColor:
+              _isFirstStepValid
+                  ? Color.fromARGB(255, 21, 21, 185)
+                  : const Color.fromARGB(255, 49, 49, 49),
+          borderColor:
+              _isFirstStepValid
+                  ? Color.fromARGB(255, 21, 21, 185)
+                  : Color.fromARGB(255, 18, 18, 23),
+          shadow:
+              _isFirstStepValid
+                  ? Color.fromARGB(255, 21, 21, 185)
+                  : Colors.transparent,
           onPressed:
               _isFirstStepValid
                   ? () {
@@ -150,26 +164,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     });
                   }
                   : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _isFirstStepValid ? Colors.blue : Colors.grey,
-            minimumSize: const Size(double.infinity, 50),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: Text(
-            "Далее",
-            style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
-          ),
         ),
         const SizedBox(height: 8),
         // Кнопка "Войти"
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            "Войти",
-            style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
-          ),
+        CustomBlueButton(
+          text: "Войти",
+          backgroundColor: const Color.fromARGB(255, 18, 18, 23),
+          borderColor: Color.fromARGB(112, 21, 21, 185),
+          shadow: Color.fromARGB(255, 21, 21, 185),
         ),
       ],
     );

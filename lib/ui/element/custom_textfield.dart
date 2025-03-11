@@ -63,7 +63,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         setState(() {
           _hasError =
               widget.controller.text.isEmpty ||
-              widget.controller.text.length > 15;
+              widget.controller.text.length > 20;
         });
       }
     });
@@ -116,7 +116,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     final List<TextInputFormatter> formatters = [];
 
     formatters.add(FilteringTextInputFormatter.deny(RegExp(r'\s')));
-    formatters.add(widget.formatter ?? FilteringTextInputFormatter.deny(""));
+    formatters.add(widget.formatter ?? (FilteringTextInputFormatter.deny("")));
     if (widget.isNumeric) {
       formatters.add(FilteringTextInputFormatter.digitsOnly);
     }
@@ -149,7 +149,9 @@ class _CustomTextFieldState extends State<CustomTextField> {
           labelStyle: TextStyle(
             color:
                 (_hasError && _isFocused)
-                    ? Colors.red
+                    ? Colors.redAccent
+                    : _isFocused
+                    ? _getCurrentBorderColor()
                     : Color.fromARGB(255, 158, 158, 184),
           ),
 

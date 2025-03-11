@@ -33,11 +33,6 @@ class DateValidator extends TextInputFormatter {
       return oldValue; // Если значение вне диапазона, возвращаем старое значение
     }
 
-    // Ограничиваем длину (например, до 2 символов для чисел до 99)
-    if (newValue.text.length > 2) {
-      return oldValue; // Если больше 2 символов, возвращаем старое значение
-    }
-
     return newValue; // Если всё в порядке, разрешаем новое значение
   }
 }
