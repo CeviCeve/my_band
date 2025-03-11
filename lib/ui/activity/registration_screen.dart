@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // Для inputFormatters
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_band/servise/date_validator.dart';
+import 'package:my_band/ui/element/custom_textfield.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -25,7 +26,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   // Для показа/скрытия пароля
   bool _isPasswordVisible = false;
 
-  // Проверка заполненности полей для первой части (Имя, Фамилия, День, Месяц, Год)
   bool get _isFirstStepValid =>
       _nameController.text.isNotEmpty &&
       _surnameController.text.isNotEmpty &&
@@ -33,12 +33,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       _monthController.text.isNotEmpty &&
       _yearController.text.isNotEmpty;
 
-  // Проверка заполненности полей для второй части
   bool get _isSecondStepValid =>
       _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
 
   @override
   void dispose() {
+    // Утилизация контроллеров
     _nameController.dispose();
     _surnameController.dispose();
     _dayController.dispose();
@@ -53,17 +53,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 18, 18, 23),
+        elevation: 0,
         centerTitle: true,
-        backgroundColor: Colors.black, // TODO: AppBar color (black)
-        elevation: 0, // Убираем тень
-        title: Text(
-          "Регистрация",
-          style: GoogleFonts.montserrat(
-            color: Colors.white,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
         leading:
             _currentStep == 2
                 ? IconButton(
@@ -76,31 +68,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 )
                 : null, // Кнопка "Назад" появляется только на втором этапе
       ),
-      backgroundColor: Colors.black, // TODO: Background color (black)
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Убрали заголовок из тела, он теперь в AppBar
-              const SizedBox(height: 32),
-              // Форма в зависимости от текущего шага
-              _currentStep == 1 ? _buildFirstStep() : _buildSecondStep(),
-              const Spacer(),
-              // Кнопка "Войти"
-              TextButton(
-                onPressed: () {}, // TODO: Реализовать переход на экран входа
-                child: Text(
-                  "Войти",
-                  style: GoogleFonts.montserrat(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                ),
+      backgroundColor: const Color.fromARGB(255, 18, 18, 23),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              "Регистрация",
+              style: GoogleFonts.montserrat(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
               ),
-            ],
-          ),
+            ),
+            _currentStep == 1 ? _buildFirstStep() : _buildSecondStep(),
+          ],
         ),
       ),
     );
@@ -109,113 +92,49 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   // Первая часть
   Widget _buildFirstStep() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TextField(
+        CustomTextField(
           controller: _nameController,
+          labelText: "Имя",
           onChanged: (_) => setState(() {}),
-          decoration: InputDecoration(
-            hintText: "Имя",
-            hintStyle: GoogleFonts.montserrat(
-              color: Colors.grey, // TODO: Hint text color (grey)
-            ),
-            filled: true,
-            fillColor: Colors.grey[800], // TODO: Background color (dark grey)
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-              borderSide: BorderSide.none,
-            ),
-          ),
-          style: GoogleFonts.montserrat(color: Colors.white),
         ),
         const SizedBox(height: 16),
-
-        TextField(
+        CustomTextField(
           controller: _surnameController,
+          labelText: "Фамилия",
           onChanged: (_) => setState(() {}),
-          decoration: InputDecoration(
-            hintText: "Фамилия",
-            hintStyle: GoogleFonts.montserrat(
-              color: Colors.grey, // TODO: Hint text color (grey)
-            ),
-            filled: true,
-            fillColor: Colors.grey[800], // TODO: Background color (dark grey)
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
-            ),
-          ),
-          style: GoogleFonts.montserrat(color: Colors.white),
         ),
         const SizedBox(height: 16),
-
         Row(
           children: [
             Expanded(
-              child: TextField(
+              child: CustomTextField(
                 controller: _dayController,
+                labelText: "ДД",
                 onChanged: (_) => setState(() {}),
-                decoration: InputDecoration(
-                  hintText: "ДД",
-                  hintStyle: GoogleFonts.montserrat(
-                    color: Colors.grey, // TODO: Hint text color (grey)
-                  ),
-                  filled: true,
-                  fillColor:
-                      Colors.grey[800], // TODO: Background color (dark grey)
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: GoogleFonts.montserrat(color: Colors.white),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                isNumeric: true,
+                formatter: DateValidator(1, 31),
               ),
             ),
             const SizedBox(width: 8),
             Expanded(
-              child: TextField(
+              child: CustomTextField(
                 controller: _monthController,
+                labelText: "ММ",
                 onChanged: (_) => setState(() {}),
-                decoration: InputDecoration(
-                  hintText: "ММ",
-                  hintStyle: GoogleFonts.montserrat(
-                    color: Colors.grey, // TODO: Hint text color (grey)
-                  ),
-                  filled: true,
-                  fillColor:
-                      Colors.grey[800], // TODO: Background color (dark grey)
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: GoogleFonts.montserrat(color: Colors.white),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                isNumeric: true,
+                formatter: DateValidator(1, 12),
               ),
             ),
             const SizedBox(width: 8),
             Expanded(
-              child: TextField(
+              child: CustomTextField(
                 controller: _yearController,
+                labelText: "ГГГГ",
                 onChanged: (_) => setState(() {}),
-                decoration: InputDecoration(
-                  hintText: "ГГГГ",
-                  hintStyle: GoogleFonts.montserrat(
-                    color: Colors.grey, // TODO: Hint text color (grey)
-                  ),
-                  filled: true,
-                  fillColor:
-                      Colors.grey[800], // TODO: Background color (dark grey)
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-                style: GoogleFonts.montserrat(color: Colors.white),
-                keyboardType: TextInputType.number,
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                isNumeric: true,
+                formatter: DateValidator(0, DateTime.now().year),
               ),
             ),
           ],
@@ -227,16 +146,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               _isFirstStepValid
                   ? () {
                     setState(() {
-                      _currentStep = 2; // Переход ко второй части
+                      _currentStep = 2;
                     });
                   }
-                  : null, // Кнопка неактивна, если поля не заполнены
+                  : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor:
-                _isFirstStepValid
-                    ? Colors
-                        .blue // TODO: Active button color (blue)
-                    : Colors.grey, // TODO: Inactive button color (grey)
+            backgroundColor: _isFirstStepValid ? Colors.blue : Colors.grey,
             minimumSize: const Size(double.infinity, 50),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -247,6 +162,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
           ),
         ),
+        const SizedBox(height: 8),
+        // Кнопка "Войти"
+        TextButton(
+          onPressed: () {},
+          child: Text(
+            "Войти",
+            style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
+          ),
+        ),
       ],
     );
   }
@@ -254,20 +178,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   // Вторая часть
   Widget _buildSecondStep() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Убрали заголовок, он теперь в AppBar
-        const SizedBox(height: 32),
-
         TextField(
           controller: _emailController,
           onChanged: (_) => setState(() {}),
           decoration: InputDecoration(
             hintText: "Почта",
-            hintStyle: GoogleFonts.montserrat(
-              color: Colors.grey, // TODO: Hint text color (grey)
-            ),
+            hintStyle: GoogleFonts.montserrat(color: Colors.grey),
             filled: true,
-            fillColor: Colors.grey[800], // TODO: Background color (dark grey)
+            fillColor: Colors.grey[800],
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,
@@ -277,18 +197,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           keyboardType: TextInputType.emailAddress,
         ),
         const SizedBox(height: 16),
-
         TextField(
           controller: _passwordController,
           onChanged: (_) => setState(() {}),
-          obscureText: !_isPasswordVisible, // Показ/скрытие пароля
+          obscureText: !_isPasswordVisible,
           decoration: InputDecoration(
             hintText: "Пароль",
-            hintStyle: GoogleFonts.montserrat(
-              color: Colors.grey, // TODO: Hint text color (grey)
-            ),
+            hintStyle: GoogleFonts.montserrat(color: Colors.grey),
             filled: true,
-            fillColor: Colors.grey[800], // TODO: Background color (dark grey)
+            fillColor: Colors.grey[800],
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide.none,
@@ -296,7 +213,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             suffixIcon: IconButton(
               icon: Icon(
                 _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                color: Colors.grey, // TODO: Icon color (grey)
+                color: Colors.grey,
               ),
               onPressed: () {
                 setState(() {
@@ -308,15 +225,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           style: GoogleFonts.montserrat(color: Colors.white),
         ),
         const SizedBox(height: 24),
-        // Кнопка "Зарегистрироваться"
         ElevatedButton(
           onPressed: _isSecondStepValid ? () {} : null,
           style: ElevatedButton.styleFrom(
-            backgroundColor:
-                _isSecondStepValid
-                    ? Colors
-                        .blue // TODO: Active button color (blue)
-                    : Colors.grey, // TODO: Inactive button color (grey)
+            backgroundColor: _isSecondStepValid ? Colors.blue : Colors.grey,
             minimumSize: const Size(double.infinity, 50),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
@@ -324,6 +236,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
           child: Text(
             "Зарегистрироваться",
+            style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
+          ),
+        ),
+        const SizedBox(height: 8),
+        TextButton(
+          onPressed: () {},
+          child: Text(
+            "Войти",
             style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
           ),
         ),
