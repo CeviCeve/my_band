@@ -6,7 +6,8 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
   final bool isNumeric;
-  final bool isEmail; // Параметр для проверки email
+  final bool isPassword;
+  final bool isEmail;
   final Function(String)? onChanged;
   final FocusNode? focusNode;
   final String? errorText;
@@ -15,12 +16,10 @@ class CustomTextField extends StatefulWidget {
   final Widget? suffixIcon;
   final TextInputType? keyboardType;
   final TextInputFormatter? formatter;
-
   final Color? enabledBorderColor;
   final Color? focusedBorderColor;
   final Color? errorBorderColor;
   final Color? focusedErrorBorderColor;
-
   final Color? fillColor;
 
   const CustomTextField({
@@ -29,6 +28,7 @@ class CustomTextField extends StatefulWidget {
     required this.labelText,
     this.isNumeric = false,
     this.isEmail = false,
+    this.isPassword = false,
     this.onChanged,
     this.focusNode,
     this.errorText,
@@ -51,40 +51,16 @@ class CustomTextField extends StatefulWidget {
 class _CustomTextFieldState extends State<CustomTextField> {
   bool _hasError = false;
   bool _isFocused = false;
-  late FocusNode _internalFocusNode; // Внутренний FocusNode
+  late FocusNode _internalFocusNode;
 
-  // Регулярное выражение для валидации email
-  final RegExp emailRegExp = RegExp(
+  static final RegExp emailRegExp = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
   );
 
   @override
   void initState() {
     super.initState();
-    // Используем переданный FocusNode или создаем новый
     _internalFocusNode = widget.focusNode ?? FocusNode();
-
-    // Проверка ошибки при изменении текста
-    widget.controller.addListener(() {
-      if (mounted) {
-        setState(() {
-          if (widget.isEmail) {
-            // Валидация для email: пустое поле или некорректный формат
-            _hasError =
-                widget.controller.text.isEmpty ||
-                (widget.controller.text.isNotEmpty &&
-                    !emailRegExp.hasMatch(widget.controller.text));
-          } else {
-            // Текущая валидация (пустое поле или длина > 20)
-            _hasError =
-                widget.controller.text.isEmpty ||
-                widget.controller.text.length > 20;
-          }
-        });
-      }
-    });
-
-    // Отслеживание фокуса
     _internalFocusNode.addListener(() {
       if (mounted) {
         setState(() {
@@ -92,57 +68,55 @@ class _CustomTextFieldState extends State<CustomTextField> {
         });
       }
     });
+    _validateInput(widget.controller.text);
   }
 
   @override
   void dispose() {
-    // Удаляем слушатель перед утилизацией
-    _internalFocusNode.removeListener(() {
-      if (mounted) {
-        setState(() {
-          _isFocused = _internalFocusNode.hasFocus;
-        });
-      }
-    });
-
-    // Утилизируем FocusNode только если он был создан внутри
+    _internalFocusNode.removeListener(() {});
     if (widget.focusNode == null) {
       _internalFocusNode.dispose();
     }
     super.dispose();
   }
 
-  // Цвет рамки в зависимости от состояния
+  void _validateInput(String value) {
+    if (widget.isEmail) {
+      _hasError = value.isEmpty || !emailRegExp.hasMatch(value);
+    } else if (widget.isPassword) {
+      _hasError = value.isEmpty || value.length < 8;
+    } else {
+      _hasError = value.isEmpty || value.length > 20;
+    }
+  }
+
   Color _getCurrentBorderColor() {
     if (_hasError) {
-      if (_isFocused) {
-        return widget.focusedErrorBorderColor ?? Colors.red;
-      }
-      return widget.errorBorderColor ?? Colors.red;
+      return _isFocused
+          ? (widget.focusedErrorBorderColor ?? Colors.red)
+          : (widget.errorBorderColor ?? Colors.red);
     }
-    if (_isFocused) {
-      return widget.focusedBorderColor ?? Colors.blue;
-    }
-    return widget.enabledBorderColor ?? const Color.fromARGB(0, 0, 0, 0);
+    return _isFocused
+        ? (widget.focusedBorderColor ?? Colors.blue)
+        : (widget.enabledBorderColor ?? const Color.fromARGB(0, 0, 0, 0));
+  }
+
+  TextInputType _getKeyboardType() {
+    return widget.keyboardType ??
+        (widget.isNumeric
+            ? TextInputType.number
+            : widget.isEmail
+            ? TextInputType.emailAddress
+            : TextInputType.text);
   }
 
   @override
   Widget build(BuildContext context) {
-    // Фильтры
-    final List<TextInputFormatter> formatters = [];
-
-    formatters.add(FilteringTextInputFormatter.deny(RegExp(r'\s')));
-
-    formatters.add(
-      widget.formatter ??
-          (widget.isEmail
-              ? FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9._%+-@]'))
-              : FilteringTextInputFormatter.deny("")),
-    );
-
-    if (widget.isNumeric) {
-      formatters.add(FilteringTextInputFormatter.digitsOnly);
-    }
+    final List<TextInputFormatter> formatters = [
+      FilteringTextInputFormatter.deny(RegExp(r'\s')),
+      if (widget.isNumeric) FilteringTextInputFormatter.digitsOnly,
+      if (widget.formatter != null) widget.formatter!,
+    ];
 
     return Container(
       decoration: BoxDecoration(
@@ -158,14 +132,13 @@ class _CustomTextFieldState extends State<CustomTextField> {
       child: TextField(
         controller: widget.controller,
         focusNode: _internalFocusNode,
-        onChanged: widget.onChanged ?? (_) => setState(() {}),
-        keyboardType:
-            widget.keyboardType ??
-            (widget.isNumeric
-                ? TextInputType.number
-                : widget.isEmail
-                ? TextInputType.emailAddress
-                : TextInputType.text),
+        onChanged: (value) {
+          setState(() {
+            _validateInput(value);
+          });
+          widget.onChanged?.call(value);
+        },
+        keyboardType: _getKeyboardType(),
         inputFormatters: formatters,
         obscureText: widget.obscureText,
         decoration: InputDecoration(
@@ -179,7 +152,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     ? Colors.redAccent
                     : _isFocused
                     ? _getCurrentBorderColor()
-                    : Color.fromARGB(255, 158, 158, 184),
+                    : const Color.fromARGB(255, 158, 158, 184),
           ),
           filled: true,
           fillColor: widget.fillColor ?? const Color.fromARGB(255, 18, 18, 23),
@@ -218,7 +191,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
           errorText:
               widget.errorText ??
               (_hasError
-                  ? (widget.isEmail ? "Некорректный email" : "Ошибка")
+                  ? (widget.isEmail
+                      ? "Некорректный email"
+                      : widget.isPassword
+                      ? "Пароль должен быть не менее 8 символов"
+                      : "Ошибка")
                   : null),
           suffixIcon: widget.suffixIcon,
         ),

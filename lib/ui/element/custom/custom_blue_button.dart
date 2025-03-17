@@ -11,7 +11,6 @@ class CustomBlueButton extends StatelessWidget {
   final double? height;
   final double? borderRadius;
   final TextStyle? textStyle;
-  final bool isDisable;
 
   const CustomBlueButton({
     super.key,
@@ -24,7 +23,6 @@ class CustomBlueButton extends StatelessWidget {
     this.borderRadius,
     this.textStyle,
     this.shadow,
-    this.isDisable = false,
   });
 
   @override
@@ -50,26 +48,23 @@ class CustomBlueButton extends StatelessWidget {
       ),
       child: Material(
         color: Colors.transparent,
-        child: AbsorbPointer(
-          absorbing: isDisable,
-          child: InkWell(
-            borderRadius: BorderRadius.circular(borderRadius ?? 6),
-            onTap: onPressed == null ? null : () => onPressed?.call(),
-            splashColor: borderColor?.withAlpha(75),
-            hoverColor: borderColor?.withAlpha(75),
-            child: Center(
-              child: Text(
-                text,
-                style:
-                    textStyle ??
-                    GoogleFonts.montserrat(
-                      color:
-                          onPressed == null
-                              ? const Color.fromARGB(117, 255, 255, 255)
-                              : Colors.white,
-                      fontSize: 16,
-                    ),
-              ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(borderRadius ?? 6),
+          onTap: onPressed == null ? null : () => onPressed?.call(),
+          splashColor: borderColor?.withAlpha(75),
+          hoverColor: borderColor?.withAlpha(75),
+          child: Center(
+            child: Text(
+              text,
+              style:
+                  textStyle ??
+                  GoogleFonts.montserrat(
+                    color:
+                        onPressed == null
+                            ? const Color.fromARGB(117, 255, 255, 255)
+                            : Colors.white,
+                    fontSize: 16,
+                  ),
             ),
           ),
         ),

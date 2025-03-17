@@ -1,8 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_band/servise/date_validator.dart';
 import 'package:my_band/ui/element/custom/custom_blue_button.dart';
 import 'package:my_band/ui/element/custom/custom_textfield.dart';
+
+const Color kActiveButtonColor = Color.fromARGB(255, 21, 21, 185);
+const Color kInactiveButtonColor = Color.fromARGB(100, 25, 25, 229);
+const Color kBackgroundColor = Color.fromARGB(255, 18, 18, 23);
+const Color kBorderColor = Color.fromARGB(112, 21, 21, 185);
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -12,7 +19,6 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  // Контроллеры для текстовых полей
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _surnameController = TextEditingController();
   final TextEditingController _dayController = TextEditingController();
@@ -21,10 +27,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  // Переключение между частями (1 или 2)
   int _currentStep = 1;
-
-  // Для показа/скрытия пароля
   bool _isPasswordVisible = false;
 
   bool get _isFirstStepValid =>
@@ -34,12 +37,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       _monthController.text.isNotEmpty &&
       _yearController.text.isNotEmpty;
 
-  bool get _isSecondStepValid =>
-      _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty;
+  bool get _isSecondStepValid {
+    final isValid =
+        _emailController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty &&
+        RegExp(
+          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+        ).hasMatch(_emailController.text) &&
+        _passwordController.text.length >= 8;
+    log(
+      "Second step valid: $isValid, Email: ${_emailController.text}, Password: ${_passwordController.text}, Length: ${_passwordController.text.length}",
+    );
+    return isValid;
+  }
 
   @override
   void dispose() {
-    // Утилизация контроллеров
     _nameController.dispose();
     _surnameController.dispose();
     _dayController.dispose();
@@ -54,22 +67,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 18, 18, 23),
+        backgroundColor: kBackgroundColor,
         elevation: 0,
         centerTitle: true,
         leading:
             _currentStep == 2
                 ? IconButton(
                   icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () {
-                    setState(() {
-                      _currentStep = 1;
-                    });
-                  },
+                  onPressed: () => setState(() => _currentStep = 1),
                 )
-                : null, // Кнопка "Назад" появляется только на втором этапе
+                : null,
       ),
-      backgroundColor: const Color.fromARGB(255, 18, 18, 23),
+      backgroundColor: kBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: Column(
@@ -90,7 +99,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  // Первая часть
   Widget _buildFirstStep() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -100,20 +108,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           labelText: "Имя",
           onChanged: (_) => setState(() {}),
         ),
-        const SizedBox(height: 16),
+
         CustomTextField(
           controller: _surnameController,
           labelText: "Фамилия",
           onChanged: (_) => setState(() {}),
         ),
-        const SizedBox(height: 16),
+
         Row(
           children: [
             Expanded(
               child: CustomTextField(
+                onChanged: (_) => setState(() {}),
                 controller: _dayController,
                 labelText: "ДД",
-                onChanged: (_) => setState(() {}),
                 isNumeric: true,
                 formatter: DateValidator(1, 31),
               ),
@@ -121,9 +129,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             const SizedBox(width: 8),
             Expanded(
               child: CustomTextField(
+                onChanged: (_) => setState(() {}),
                 controller: _monthController,
                 labelText: "ММ",
-                onChanged: (_) => setState(() {}),
                 isNumeric: true,
                 formatter: DateValidator(1, 12),
               ),
@@ -131,9 +139,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             const SizedBox(width: 8),
             Expanded(
               child: CustomTextField(
+                onChanged: (_) => setState(() {}),
                 controller: _yearController,
                 labelText: "ГГГГ",
-                onChanged: (_) => setState(() {}),
                 isNumeric: true,
                 formatter: DateValidator(0, DateTime.now().year),
               ),
@@ -141,117 +149,87 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ],
         ),
         const SizedBox(height: 24),
-
         CustomBlueButton(
           text: "Далее",
-          
           backgroundColor:
-              _isFirstStepValid
-                  ? Color.fromARGB(255, 21, 21, 185)
-                  : Color.fromARGB(100, 21, 21, 185),
+              _isFirstStepValid ? kActiveButtonColor : kInactiveButtonColor,
           borderColor:
-              _isFirstStepValid
-                  ? Color.fromARGB(255, 21, 21, 185)
-                  : Color.fromARGB(255, 18, 18, 23),
-          shadow:
-              _isFirstStepValid
-                  ? Color.fromARGB(255, 21, 21, 185)
-                  : Colors.transparent,
+              _isFirstStepValid ? kActiveButtonColor : kBackgroundColor,
+          shadow: _isFirstStepValid ? kActiveButtonColor : Colors.transparent,
           onPressed:
-              _isFirstStepValid
-                  ? () {
-                    setState(() {
-                      _currentStep = 2;
-                    });
-                  }
-                  : null,
+              _isFirstStepValid ? () => setState(() => _currentStep = 2) : null,
         ),
         const SizedBox(height: 8),
-        // Кнопка "Войти"
         CustomBlueButton(
           onPressed: () {},
           text: "Войти",
-          backgroundColor: const Color.fromARGB(255, 18, 18, 23),
-          borderColor: Color.fromARGB(112, 21, 21, 185),
-          shadow: Color.fromARGB(255, 21, 21, 185),
+          backgroundColor: kBackgroundColor,
+          borderColor: kBorderColor,
+          shadow: kActiveButtonColor,
         ),
       ],
     );
   }
 
-  // Вторая часть
   Widget _buildSecondStep() {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         CustomTextField(
+          onChanged: (_) => setState(() {}),
           controller: _emailController,
           labelText: "Почта",
-          isEmail: false,
+          isEmail: true,
           keyboardType: TextInputType.emailAddress,
-          onChanged: (_) => setState(() {}),
         ),
         const SizedBox(height: 16),
-        TextField(
-          controller: _passwordController,
+        CustomTextField(
           onChanged: (_) => setState(() {}),
+          controller: _passwordController,
+          labelText: "Пароль",
+          isPassword: true,
           obscureText: !_isPasswordVisible,
-          decoration: InputDecoration(
-            hintText: "Пароль",
-            hintStyle: GoogleFonts.montserrat(color: Colors.grey),
-            filled: true,
-            fillColor: Colors.grey[800],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
+          suffixIcon: IconButton(
+            icon: Icon(
+              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              color: Colors.grey,
             ),
-            suffixIcon: IconButton(
-              icon: Icon(
-                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-                color: Colors.grey,
-              ),
-              onPressed: () {
-                setState(() {
-                  _isPasswordVisible = !_isPasswordVisible;
-                });
-              },
-            ),
+            onPressed: () {
+              setState(() {
+                _isPasswordVisible = !_isPasswordVisible;
+                // Синхронизируем валидацию после переключения видимости
+                _validateSecondStep();
+              });
+            },
           ),
-          style: GoogleFonts.montserrat(color: Colors.white),
         ),
         const SizedBox(height: 24),
         CustomBlueButton(
           text: "Далее",
           backgroundColor:
-              _isSecondStepValid
-                  ? Color.fromARGB(255, 21, 21, 185)
-                  : Color.fromARGB(100, 25, 25, 229),
+              _isSecondStepValid ? kActiveButtonColor : kInactiveButtonColor,
           borderColor:
-              _isSecondStepValid
-                  ? Color.fromARGB(255, 21, 21, 185)
-                  : Color.fromARGB(0, 25, 25, 229),
-          shadow:
-              _isSecondStepValid
-                  ? Color.fromARGB(255, 21, 21, 185)
-                  : Colors.transparent,
+              _isSecondStepValid ? kActiveButtonColor : Colors.transparent,
+          shadow: _isSecondStepValid ? kActiveButtonColor : Colors.transparent,
           onPressed:
               _isSecondStepValid
-                  ? () {
-                    setState(() {
-                      _currentStep = 2;
-                    });
-                  }
+                  ? () => log("Second step valid: $_isSecondStepValid")
                   : null,
         ),
         const SizedBox(height: 8),
         CustomBlueButton(
           onPressed: () {},
           text: "Войти",
-          backgroundColor: const Color.fromARGB(255, 18, 18, 23),
-          borderColor: Color.fromARGB(112, 21, 21, 185),
-          shadow: Color.fromARGB(255, 21, 21, 185),
+          backgroundColor: kBackgroundColor,
+          borderColor: kBorderColor,
+          shadow: kActiveButtonColor,
         ),
       ],
     );
+  }
+
+  // Метод для ручной валидации второго шага
+  void _validateSecondStep() {
+    setState(() {});
   }
 }
