@@ -6,6 +6,7 @@ class CustomTextField extends StatefulWidget {
   final TextEditingController controller;
   final String labelText;
   final bool isNumeric;
+  final bool isEmail; // Параметр для проверки email
   final Function(String)? onChanged;
   final FocusNode? focusNode;
   final String? errorText;
@@ -27,6 +28,7 @@ class CustomTextField extends StatefulWidget {
     required this.controller,
     required this.labelText,
     this.isNumeric = false,
+    this.isEmail = false,
     this.onChanged,
     this.focusNode,
     this.errorText,
@@ -51,6 +53,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
   bool _isFocused = false;
   late FocusNode _internalFocusNode; // Внутренний FocusNode
 
+  // Регулярное выражение для валидации email
+  final RegExp emailRegExp = RegExp(
+    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+  );
+
   @override
   void initState() {
     super.initState();
@@ -61,9 +68,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
     widget.controller.addListener(() {
       if (mounted) {
         setState(() {
-          _hasError =
-              widget.controller.text.isEmpty ||
-              widget.controller.text.length > 20;
+          if (widget.isEmail) {
+            // Валидация для email: пустое поле или некорректный формат
+            _hasError =
+                widget.controller.text.isEmpty ||
+                (widget.controller.text.isNotEmpty &&
+                    !emailRegExp.hasMatch(widget.controller.text));
+          } else {
+            // Текущая валидация (пустое поле или длина > 20)
+            _hasError =
+                widget.controller.text.isEmpty ||
+                widget.controller.text.length > 20;
+          }
         });
       }
     });
@@ -96,7 +112,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     super.dispose();
   }
 
-  // цвет рамки в зависимости от состояния
+  // Цвет рамки в зависимости от состояния
   Color _getCurrentBorderColor() {
     if (_hasError) {
       if (_isFocused) {
@@ -112,11 +128,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    // ФЫильтры
+    // Фильтры
     final List<TextInputFormatter> formatters = [];
 
     formatters.add(FilteringTextInputFormatter.deny(RegExp(r'\s')));
-    formatters.add(widget.formatter ?? (FilteringTextInputFormatter.deny("")));
+
+    formatters.add(
+      widget.formatter ??
+          (widget.isEmail
+              ? FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9._%+-@]'))
+              : FilteringTextInputFormatter.deny("")),
+    );
+
     if (widget.isNumeric) {
       formatters.add(FilteringTextInputFormatter.digitsOnly);
     }
@@ -138,7 +161,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
         onChanged: widget.onChanged ?? (_) => setState(() {}),
         keyboardType:
             widget.keyboardType ??
-            (widget.isNumeric ? TextInputType.number : TextInputType.text),
+            (widget.isNumeric
+                ? TextInputType.number
+                : widget.isEmail
+                ? TextInputType.emailAddress
+                : TextInputType.text),
         inputFormatters: formatters,
         obscureText: widget.obscureText,
         decoration: InputDecoration(
@@ -154,7 +181,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
                     ? _getCurrentBorderColor()
                     : Color.fromARGB(255, 158, 158, 184),
           ),
-
           filled: true,
           fillColor: widget.fillColor ?? const Color.fromARGB(255, 18, 18, 23),
           enabledBorder: OutlineInputBorder(
@@ -189,7 +215,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
               width: 2.0,
             ),
           ),
-          errorText: widget.errorText ?? (_hasError ? "Ошибка" : null),
+          errorText:
+              widget.errorText ??
+              (_hasError
+                  ? (widget.isEmail ? "Некорректный email" : "Ошибка")
+                  : null),
           suffixIcon: widget.suffixIcon,
         ),
         style: GoogleFonts.montserrat(color: Colors.white),

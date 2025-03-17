@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_band/servise/date_validator.dart';
-import 'package:my_band/ui/element/custom_blue_button.dart';
-import 'package:my_band/ui/element/custom_textfield.dart';
+import 'package:my_band/ui/element/custom/custom_blue_button.dart';
+import 'package:my_band/ui/element/custom/custom_textfield.dart';
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -144,10 +144,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
         CustomBlueButton(
           text: "Далее",
+          
           backgroundColor:
               _isFirstStepValid
                   ? Color.fromARGB(255, 21, 21, 185)
-                  : const Color.fromARGB(255, 49, 49, 49),
+                  : Color.fromARGB(100, 21, 21, 185),
           borderColor:
               _isFirstStepValid
                   ? Color.fromARGB(255, 21, 21, 185)
@@ -168,6 +169,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         const SizedBox(height: 8),
         // Кнопка "Войти"
         CustomBlueButton(
+          onPressed: () {},
           text: "Войти",
           backgroundColor: const Color.fromARGB(255, 18, 18, 23),
           borderColor: Color.fromARGB(112, 21, 21, 185),
@@ -182,21 +184,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TextField(
+        CustomTextField(
           controller: _emailController,
-          onChanged: (_) => setState(() {}),
-          decoration: InputDecoration(
-            hintText: "Почта",
-            hintStyle: GoogleFonts.montserrat(color: Colors.grey),
-            filled: true,
-            fillColor: Colors.grey[800],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
-            ),
-          ),
-          style: GoogleFonts.montserrat(color: Colors.white),
+          labelText: "Почта",
+          isEmail: false,
           keyboardType: TextInputType.emailAddress,
+          onChanged: (_) => setState(() {}),
         ),
         const SizedBox(height: 16),
         TextField(
@@ -227,27 +220,36 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           style: GoogleFonts.montserrat(color: Colors.white),
         ),
         const SizedBox(height: 24),
-        ElevatedButton(
-          onPressed: _isSecondStepValid ? () {} : null,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: _isSecondStepValid ? Colors.blue : Colors.grey,
-            minimumSize: const Size(double.infinity, 50),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-          child: Text(
-            "Зарегистрироваться",
-            style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
-          ),
+        CustomBlueButton(
+          text: "Далее",
+          backgroundColor:
+              _isSecondStepValid
+                  ? Color.fromARGB(255, 21, 21, 185)
+                  : Color.fromARGB(100, 25, 25, 229),
+          borderColor:
+              _isSecondStepValid
+                  ? Color.fromARGB(255, 21, 21, 185)
+                  : Color.fromARGB(0, 25, 25, 229),
+          shadow:
+              _isSecondStepValid
+                  ? Color.fromARGB(255, 21, 21, 185)
+                  : Colors.transparent,
+          onPressed:
+              _isSecondStepValid
+                  ? () {
+                    setState(() {
+                      _currentStep = 2;
+                    });
+                  }
+                  : null,
         ),
         const SizedBox(height: 8),
-        TextButton(
+        CustomBlueButton(
           onPressed: () {},
-          child: Text(
-            "Войти",
-            style: GoogleFonts.montserrat(color: Colors.white, fontSize: 16),
-          ),
+          text: "Войти",
+          backgroundColor: const Color.fromARGB(255, 18, 18, 23),
+          borderColor: Color.fromARGB(112, 21, 21, 185),
+          shadow: Color.fromARGB(255, 21, 21, 185),
         ),
       ],
     );

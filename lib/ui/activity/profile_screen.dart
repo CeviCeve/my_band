@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_band/models/user_model.dart';
 import 'package:my_band/servise/decoder.dart';
-import 'package:my_band/ui/element/custom_button_large.dart';
+import 'package:my_band/ui/element/custom/custom_button_large.dart';
 
 // Экран профиля пользователя
 class ProfileScreen extends StatefulWidget {
