@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_band/servise/date_validator.dart';
+import 'package:my_band/ui/activity/login_screen.dart';
 import 'package:my_band/ui/element/custom/custom_blue_button.dart';
 import 'package:my_band/ui/element/custom/custom_textfield.dart';
 
@@ -109,10 +110,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           onChanged: (_) => setState(() {}),
         ),
 
-        CustomTextField(
-          controller: _surnameController,
-          labelText: "Фамилия",
-          onChanged: (_) => setState(() {}),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+          child: CustomTextField(
+            controller: _surnameController,
+            labelText: "Фамилия",
+            onChanged: (_) => setState(() {}),
+          ),
         ),
 
         Row(
@@ -161,7 +165,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
         const SizedBox(height: 8),
         CustomBlueButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => LoginScreen()),
+            );
+          },
           text: "Войти",
           backgroundColor: kBackgroundColor,
           borderColor: kBorderColor,
@@ -182,30 +191,32 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           isEmail: true,
           keyboardType: TextInputType.emailAddress,
         ),
-        const SizedBox(height: 16),
-        CustomTextField(
-          onChanged: (_) => setState(() {}),
-          controller: _passwordController,
-          labelText: "Пароль",
-          isPassword: true,
-          obscureText: !_isPasswordVisible,
-          suffixIcon: IconButton(
-            icon: Icon(
-              _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-              color: Colors.grey,
+
+        Padding(
+          padding: const EdgeInsets.fromLTRB(0, 16, 0, 24),
+          child: CustomTextField(
+            onChanged: (_) => setState(() {}),
+            controller: _passwordController,
+            labelText: "Пароль",
+            isPassword: true,
+            obscureText: !_isPasswordVisible,
+            suffixIcon: IconButton(
+              icon: Icon(
+                _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+              ),
+              onPressed: () {
+                setState(() {
+                  _isPasswordVisible = !_isPasswordVisible;
+                  // Синхронизируем валидацию после переключения видимости
+                  _validateSecondStep();
+                });
+              },
             ),
-            onPressed: () {
-              setState(() {
-                _isPasswordVisible = !_isPasswordVisible;
-                // Синхронизируем валидацию после переключения видимости
-                _validateSecondStep();
-              });
-            },
           ),
         ),
-        const SizedBox(height: 24),
+
         CustomBlueButton(
-          text: "Далее",
+          text: "Зарегестрироваться",
           backgroundColor:
               _isSecondStepValid ? kActiveButtonColor : kInactiveButtonColor,
           borderColor:
@@ -215,14 +226,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               _isSecondStepValid
                   ? () => log("Second step valid: $_isSecondStepValid")
                   : null,
-        ),
-        const SizedBox(height: 8),
-        CustomBlueButton(
-          onPressed: () {},
-          text: "Войти",
-          backgroundColor: kBackgroundColor,
-          borderColor: kBorderColor,
-          shadow: kActiveButtonColor,
         ),
       ],
     );

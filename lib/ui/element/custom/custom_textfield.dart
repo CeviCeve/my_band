@@ -198,6 +198,18 @@ class _CustomTextFieldState extends State<CustomTextField> {
                       : "Ошибка")
                   : null),
           suffixIcon: widget.suffixIcon,
+          iconColor:
+              _isFocused
+                  ? Colors.blueAccent
+                  : _hasError
+                  ? Colors.redAccent
+                  : Colors.blueGrey,
+          suffixIconColor:
+              _hasError
+                  ? Colors.redAccent
+                  : _isFocused
+                  ? Colors.blueAccent
+                  : Color.fromARGB(255, 158, 158, 184),
         ),
         style: GoogleFonts.montserrat(color: Colors.white),
       ),
