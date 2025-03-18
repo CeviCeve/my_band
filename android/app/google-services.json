@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "167612364118",
+    "project_id": "myband-42825",
+    "storage_bucket": "myband-42825.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:167612364118:android:941c2e09f5a5cb9dac92f7",
+        "android_client_info": {
+          "package_name": "com.example.my_band"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJZlBoCR7oJDRuMQfRb930o8cYFrqHy-k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

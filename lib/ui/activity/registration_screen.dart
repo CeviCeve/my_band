@@ -85,12 +85,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              "Регистрация",
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+              child: Text(
+                "Регистрация",
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  shadows: <Shadow>[
+                    Shadow(
+                      color: Colors.white,
+                      offset: Offset(0, 0),
+                      blurRadius: 20,
+                    ),
+                  ],
+                ),
               ),
             ),
             _currentStep == 1 ? _buildFirstStep() : _buildSecondStep(),
