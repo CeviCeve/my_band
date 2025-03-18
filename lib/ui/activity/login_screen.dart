@@ -34,9 +34,8 @@ class _LoginScreenState extends State<LoginScreen> {
           r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
         ).hasMatch(_emailController.text) &&
         _passwordController.text.length >= 8;
-    log(
-      "Second step valid: $isValid, Email: ${_emailController.text}, Password: ${_passwordController.text}, Length: ${_passwordController.text.length}",
-    );
+    //log(isValid.toString());
+    //log(      "Second step valid: $isValid, Email: ${_emailController.text}, Password: ${_passwordController.text}, Length: ${_passwordController.text.length}",);
     return isValid;
   }
 
@@ -133,9 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
           borderColor: _isStepValid ? kActiveButtonColor : Colors.transparent,
           shadow: _isStepValid ? kActiveButtonColor : Colors.transparent,
           onPressed:
-              _isStepValid
-                  ? () => log("Second step valid: $_isStepValid")
-                  : null,
+              _isStepValid ? () => log("Login valid: $_isStepValid") : null,
         ),
         const SizedBox(height: 8),
         CustomBlueButton(

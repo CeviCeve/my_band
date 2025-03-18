@@ -46,9 +46,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
         ).hasMatch(_emailController.text) &&
         _passwordController.text.length >= 8;
-    log(
-      "Second step valid: $isValid, Email: ${_emailController.text}, Password: ${_passwordController.text}, Length: ${_passwordController.text.length}",
-    );
+    //log(isValid.toString());
+    //log("Second step valid: $isValid, Email: ${_emailController.text}, Password: ${_passwordController.text}, Length: ${_passwordController.text.length}",);
     return isValid;
   }
 
@@ -230,7 +229,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           shadow: _isSecondStepValid ? kActiveButtonColor : Colors.transparent,
           onPressed:
               _isSecondStepValid
-                  ? () => log("Second step valid: $_isSecondStepValid")
+                  ? () => log("Registration valid: $_isSecondStepValid")
                   : null,
         ),
       ],
