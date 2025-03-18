@@ -27,7 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   bool get _isStepValid {
     final isValid =
-        _nameController.text.isEmpty &&
+        _nameController.text.isNotEmpty &&
         _emailController.text.isNotEmpty &&
         _passwordController.text.isNotEmpty &&
         RegExp(
@@ -62,12 +62,18 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              "Вход",
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 16, 0, 20),
+              child: Text(
+                "Вход",
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  shadows: <Shadow>[
+                    Shadow(color: Colors.white, blurRadius: 20),
+                  ],
+                ),
               ),
             ),
             _buildLogin(),
@@ -87,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
           onChanged: (_) => setState(() {}),
         ),
         Padding(
-          padding: const EdgeInsets.fromLTRB(0, 16, 0, 16),
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
           child: CustomTextField(
             onChanged: (_) => setState(() {}),
             controller: _emailController,

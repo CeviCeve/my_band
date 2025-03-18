@@ -85,12 +85,18 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Text(
-              "Регистрация",
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 20,
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 16, 0, 20),
+              child: Text(
+                "Регистрация",
+                style: GoogleFonts.montserrat(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                  shadows: <Shadow>[
+                    Shadow(color: Colors.white, blurRadius: 20),
+                  ],
+                ),
               ),
             ),
             _currentStep == 1 ? _buildFirstStep() : _buildSecondStep(),
@@ -158,7 +164,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           backgroundColor:
               _isFirstStepValid ? kActiveButtonColor : kInactiveButtonColor,
           borderColor:
-              _isFirstStepValid ? kActiveButtonColor : kBackgroundColor,
+              _isFirstStepValid ? kActiveButtonColor : Colors.transparent,
           shadow: _isFirstStepValid ? kActiveButtonColor : Colors.transparent,
           onPressed:
               _isFirstStepValid ? () => setState(() => _currentStep = 2) : null,
