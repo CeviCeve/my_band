@@ -151,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  // Метод для ручной валидации второго шага
+  // Метод для ручной валидации шага
   void _validateSecondStep() {
     setState(() {});
   }
