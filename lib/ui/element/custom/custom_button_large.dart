@@ -6,6 +6,7 @@ class CustomButton extends StatelessWidget {
   final Color? color;
   final double? heigth;
   final double? textSize;
+  final VoidCallback? function;
 
   const CustomButton({
     super.key,
@@ -13,6 +14,7 @@ class CustomButton extends StatelessWidget {
     this.color,
     this.heigth,
     this.textSize,
+    this.function,
   });
 
   @override
@@ -35,7 +37,7 @@ class CustomButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(15),
             ),
           ),
-          onPressed: () {},
+          onPressed: function,
           child: Padding(
             padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
             child: Row(

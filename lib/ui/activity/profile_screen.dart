@@ -1,8 +1,14 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_band/models/user_model.dart';
-import 'package:my_band/servise/decoder.dart';
+import 'package:my_band/data/dto_pattern/models/web/user_model.dart';
+import 'package:my_band/data/servise/decoder.dart';
+import 'package:my_band/ui/activity/my_contacts_screen.dart';
+import 'package:my_band/ui/activity/my_group_screen.dart';
+import 'package:my_band/ui/activity/my_instruments_screen.dart';
 import 'package:my_band/ui/element/custom/custom_button_large.dart';
+import 'package:my_band/ui/helper/anim_helper.dart';
 
 // Экран профиля пользователя
 class ProfileScreen extends StatefulWidget {
@@ -15,8 +21,15 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final EnumDecoder decoder =
-      EnumDecoder(); // Декодер для преобразования enum в строки
+  final EnumDecoder decoder = EnumDecoder();
+
+  void t() {
+    log("true");
+    Navigator.pop(
+      context,
+      MaterialPageRoute(builder: (context) => Scaffold(appBar: AppBar())),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,16 +191,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         text: "Мои инструменты",
                         textSize: 12,
                         heigth: 20,
+                        function:
+                            () => AnimHelper.slideLefttoRight(
+                              MyInstrumentsScreen(),
+                              context,
+                            ),
                       ),
                       CustomButton(
                         text: "Мои группы",
                         textSize: 12,
                         heigth: 20,
+                        function:
+                            () => AnimHelper.slideLefttoRight(
+                              MyGroupScreen(),
+                              context,
+                            ),
                       ),
                       CustomButton(
                         text: "Мои контакты",
                         textSize: 12,
                         heigth: 20,
+                        function:
+                            () => AnimHelper.slideLefttoRight(
+                              MyContactsScreen(),
+                              context,
+                            ),
                       ),
                     ],
                   ),
@@ -225,9 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ListView.builder(
             shrinkWrap: true, // Уменьшает размер до содержимого
             physics: NeverScrollableScrollPhysics(),
-            itemCount:
-                widget.user?.proficiencyLevel.length ??
-                2, //TODO Минимум 2 элемента
+            itemCount: widget.user?.proficiencyLevel.length ?? 2,
             itemBuilder: (context, index) {
               final instrument =
                   widget.user?.proficiencyLevel[index].instrument;

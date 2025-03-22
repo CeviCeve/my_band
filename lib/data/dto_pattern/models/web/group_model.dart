@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:my_band/models/contact_model.dart';
+import 'package:my_band/data/dto_pattern/models/web/contact_model.dart';
 
 part 'group_model.g.dart';
 

@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_band/servise/date_validator.dart';
+import 'package:my_band/data/servise/date_validator.dart';
 import 'package:my_band/ui/activity/login_screen.dart';
 import 'package:my_band/ui/element/custom/custom_blue_button.dart';
 import 'package:my_band/ui/element/custom/custom_textfield.dart';

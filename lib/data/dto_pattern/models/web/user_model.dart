@@ -1,9 +1,9 @@
 import 'package:isar/isar.dart';
-import 'package:my_band/models/contact_model.dart';
-import 'package:my_band/models/group_model.dart';
-import 'package:my_band/models/instrument_model.dart';
-import 'package:my_band/models/location_model.dart';
-import 'package:my_band/models/proficiency_level_model.dart';
+import 'package:my_band/data/dto_pattern/models/web/contact_model.dart';
+import 'package:my_band/data/dto_pattern/models/web/group_model.dart';
+import 'package:my_band/data/dto_pattern/models/web/instrument_model.dart';
+import 'package:my_band/data/dto_pattern/models/web/location_model.dart';
+import 'package:my_band/data/dto_pattern/models/web/proficiency_level_model.dart';
 
 part 'user_model.g.dart';
 

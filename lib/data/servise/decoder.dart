@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:my_band/enum/instruments.dart';
-import 'package:my_band/enum/proficiency.dart';
+import 'package:my_band/data/enum/instruments.dart';
+import 'package:my_band/data/enum/proficiency.dart';
 
 class EnumDecoder {
   final Map<Instruments, String> instrumentMap = {
