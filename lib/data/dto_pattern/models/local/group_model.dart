@@ -1,4 +1,4 @@
-import 'package:my_band/data/dto_pattern/models/local/contact_model.dart';
+import 'package:my_band/data/dto_pattern/models/web/contact_model.dart';
 
 class Group {
   List<String>? users;
@@ -36,6 +36,33 @@ class Group {
       icon: icon ?? this.icon,
       about: about ?? this.about,
       contacts: contacts ?? this.contacts,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'users': users,
+      'name': name,
+      'style': style,
+      'creatorId': creatorId,
+      'icon': icon,
+      'about': about,
+      'contacts': contacts?.map((contact) => contact.toJson()).toList(),
+    };
+  }
+
+  factory Group.fromJson(Map<String, dynamic> json) {
+    return Group(
+      users: (json['users'] as List<dynamic>?)?.cast<String>(),
+      name: json['name'] as String,
+      style: json['style'] as String?,
+      creatorId: json['creatorId'] as String,
+      icon: json['icon'] as String?,
+      about: json['about'] as String?,
+      contacts:
+          (json['contacts'] as List<dynamic>?)
+              ?.map((item) => Contact.fromJson(item as Map<String, dynamic>))
+              .toList(),
     );
   }
 }

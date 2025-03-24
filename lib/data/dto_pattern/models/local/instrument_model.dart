@@ -39,4 +39,35 @@ class Instrument {
       instrumentPhoto: instrumentPhoto ?? this.instrumentPhoto,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'manufacturer': manufacturer,
+      'type': type.name,
+      'possessionTime': possessionTime,
+      'proficiencyLevel': proficiencyLevel.name,
+      'about': about,
+      'instrumentPhoto': instrumentPhoto,
+    };
+  }
+
+  factory Instrument.fromJson(Map<String, dynamic> json) {
+    return Instrument(
+      name: json['name'] as String,
+      manufacturer: json['manufacturer'] as String?,
+      type: Instruments.values.firstWhere(
+        (e) => e.name == json['type'],
+        orElse: () => Instruments.bassetHorn,
+      ),
+      possessionTime: json['possessionTime'] as String?,
+      proficiencyLevel: Proficiency.values.firstWhere(
+        (e) => e.name == json['proficiencyLevel'],
+        orElse: () => Proficiency.Beginner,
+      ),
+      about: json['about'] as String?,
+      instrumentPhoto:
+          (json['instrumentPhoto'] as List<dynamic>?)?.cast<String>(),
+    );
+  }
 }

@@ -44,14 +44,16 @@ class WebDto {
     required String password,
   }) async {
     try {
-      // Аутентификация через PocketBase
       final authData = await pb
           .collection('users')
           .authWithPassword(email, password);
-      // Возвращаем токен и данные пользователя
+
+      if (authData.record.data.isEmpty) {
+        return {"error": "Ошибка регистрации"};
+      }
+
       return {'token': authData.token, 'user': authData.record.data};
     } catch (e) {
-      // Возвращаем ошибку в случае неудачи
       return {"error": e};
     }
   }
@@ -64,6 +66,7 @@ void main() async {
       email: "john@examplle.com",
       password: "tBMLpWU8hcHQ_Yi",
     );
+
     log('Registered user: ${userData['token']}, ${userData['user']}');
   } catch (e) {
     log(e.toString());

@@ -12,4 +12,16 @@ class Contact {
       visibility: visibility ?? this.visibility,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {'name': name, 'inside': inside, 'visibility': visibility};
+  }
+
+  factory Contact.fromJson(Map<String, dynamic> json) {
+    return Contact(
+      name: json['name'] as String?,
+      inside: json['inside'] as String?,
+      visibility: json['visibility'] as bool?,
+    );
+  }
 }

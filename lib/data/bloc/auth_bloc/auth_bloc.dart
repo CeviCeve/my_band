@@ -14,7 +14,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthToReg>((event, emit) async {
       emit(AuthLoading());
       try {
-        await webDto.registration(
+        final response = await webDto.registration(
           name: event.name,
           email: event.email,
           password: event.password,
@@ -22,13 +22,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           dob: event.dob,
           userCode: event.email.hashCode.toString(),
         );
+        emit(AuthContinue());
       } catch (e) {
         emit(AuthError(errorMessage: "ошибка при регистрации"));
       }
     });
 
-    on<AuthToLogin>((event, emit) {
+    on<AuthToLogin>((event, emit) async {
       emit(AuthLoading());
+      try {
+        final response = await webDto.login(
+          email: event.email,
+          password: event.password,
+        );
+        emit(AuthContinue());
+      } catch (e) {
+        emit(AuthError(errorMessage: "ошибка при входе"));
+      }
     });
   }
 }
