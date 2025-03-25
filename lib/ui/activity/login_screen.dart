@@ -2,8 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_band/data/dto_pattern/dto/web_dto.dart';
+import 'package:my_band/data/dto_pattern/models/global_data.dart';
+import 'package:my_band/data/dto_pattern/models/local/user_model.dart';
 import 'package:my_band/ui/activity/registration_screen.dart';
 import 'package:my_band/ui/element/custom/custom_blue_button.dart';
+import 'package:my_band/ui/element/custom/custom_bottom_nav_bar.dart';
 import 'package:my_band/ui/element/custom/custom_textfield.dart';
 
 const Color kActiveButtonColor = Color.fromARGB(255, 21, 21, 185);
@@ -132,8 +136,36 @@ class _LoginScreenState extends State<LoginScreen> {
           borderColor: _isStepValid ? kActiveButtonColor : Colors.transparent,
           shadow: _isStepValid ? kActiveButtonColor : Colors.transparent,
           onPressed:
-              _isStepValid ? () => log("Login valid: $_isStepValid") : null,
+              _isStepValid
+                  ? () async {
+                    WebDto dto = WebDto();
+
+                    try {
+                      final json = await dto.login(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      );
+                      String token = json['token'];
+                      User user = User.fromJson(json['user']);
+
+                      GlobalData.user = user;
+                      log("Token: $token");
+                      log("User: ${user.toJson()}"); // Логируем user в JSON
+                    } catch (e) {
+                      log("Ошибка при логине: $e");
+                    }
+
+                    Durations.short4;
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CustomBottomNavBar(),
+                      ),
+                    );
+                  }
+                  : null,
         ),
+
         const SizedBox(height: 8),
         CustomBlueButton(
           onPressed: () {

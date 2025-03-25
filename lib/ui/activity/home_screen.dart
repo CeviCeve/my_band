@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_band/ui/activity/groups/search_screen.dart';
 import 'package:my_band/ui/element/custom/custom_button_large.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -15,7 +16,16 @@ class HomeScreen extends StatelessWidget {
           children: [
             SizedBox(height: 65, child: Image.asset("assets/my_band.png")),
 
-            CustomButton(text: 'Найти группу'),
+            CustomButton(
+              text: 'Найти группу',
+              function:
+                  () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SearchGroupScreen(),
+                    ),
+                  ),
+            ),
             CustomButton(text: 'Найти музыканта'),
             CustomButton(text: 'Реп-точки'),
           ],

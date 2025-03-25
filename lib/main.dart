@@ -10,7 +10,7 @@ Future<void> main() async {
     MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: !isLoggedIn ? CustomBottomNavBar() : LoginScreen(),
+      home: isLoggedIn ? CustomBottomNavBar() : LoginScreen(),
     ),
   );
 }

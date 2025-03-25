@@ -74,11 +74,11 @@ class User {
   // Фабричный метод для десериализации из JSON
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      name: json['name'] as String,
+      name: json['name'] ?? '', // Если null, то пустая строка
       surname: json['surname'] as String?,
       dob: json['dob'] as String?,
-      email: json['email'] as String,
-      password: json['password'] as String,
+      email: json['email'] ?? '',
+      password: json['password'] ?? '',
       education: json['education'] as String?,
       status: json['status'] as String?,
       likeBand: json['likeBand'] as String?,
@@ -106,7 +106,7 @@ class User {
               )
               .toList() ??
           [],
-      userCode: json['userCode'] as String,
+      userCode: json['userCode'] ?? '',
       icon: json['icon'] as String?,
       background: json['background'] as String?,
       location:
