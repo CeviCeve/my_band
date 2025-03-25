@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_band/ui/activity/instruments_profile_screen.dart';
+import 'package:my_band/data/dto_pattern/models/local/group_model.dart';
+import 'package:my_band/data/dto_pattern/models/local/instrument_model.dart';
+import 'package:my_band/data/dto_pattern/models/local/user_model.dart';
+import 'package:my_band/ui/activity/instruments/instruments_profile_screen.dart';
 import 'package:my_band/ui/helper/anim_helper.dart';
 
 class BasicInstrumentCard extends StatelessWidget {
@@ -23,8 +26,39 @@ class BasicInstrumentCard extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
       child: InkWell(
         onTap:
-            () =>
-                AnimHelper.slideBottomToTop(InstrumentProfileScreen(), context),
+            () => AnimHelper.slideBottomToTop(
+              InstrumentProfileScreen(
+                user: User(
+                  name: "имя",
+                  password: "yghuji",
+                  userCode: "",
+                  email: 'emma.watson@example.com',
+                  instruments: [Instrument(name: "SuperStrat")],
+                  groups: [
+                    Group(
+                      name: 'SuperMegaDemons',
+                      style: 'power-metal',
+                      creatorId: 'emma.watson@example.com',
+                      about: 'Cool band!',
+                      users: ['emma.watson@example.com'],
+                      icon: 'assets/my_band.png',
+                    ),
+                    Group(
+                      name: 'SuperMegaDemons',
+                      style: 'power-metal',
+                      creatorId: 'other.user@example.com',
+                      about: 'Another cool band!',
+                      users: [
+                        'other.user@example.com',
+                        'emma.watson@example.com',
+                      ],
+                      icon: 'assets/my_band.png',
+                    ),
+                  ],
+                ),
+              ),
+              context,
+            ),
         focusColor: Colors.transparent,
         child: Container(
           height: 66,

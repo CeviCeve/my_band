@@ -33,15 +33,18 @@ class User {
     this.status,
     this.likeBand,
     this.about,
-    this.instruments = const [],
-    this.groups = const [],
-    this.contacts = const [],
-    this.proficiencyLevel = const [],
+    List<Instrument>? instruments,
+    List<Group>? groups,
+    List<Contact>? contacts,
+    List<ProficiencyLevel>? proficiencyLevel,
     required this.userCode,
     this.icon,
     this.background,
     this.location,
-  });
+  }) : instruments = instruments ?? [],
+       groups = groups ?? [],
+       contacts = contacts ?? [],
+       proficiencyLevel = proficiencyLevel ?? [];
 
   // Метод для сериализации объекта в JSON
   Map<String, dynamic> toJson() {
@@ -142,10 +145,14 @@ class User {
       status: status ?? this.status,
       likeBand: likeBand ?? this.likeBand,
       about: about ?? this.about,
-      instruments: instruments ?? this.instruments,
-      groups: groups ?? this.groups,
-      contacts: contacts ?? this.contacts,
-      proficiencyLevel: proficiencyLevel ?? this.proficiencyLevel,
+      instruments:
+          instruments != null ? List.from(instruments) : this.instruments,
+      groups: groups != null ? List.from(groups) : this.groups,
+      contacts: contacts != null ? List.from(contacts) : this.contacts,
+      proficiencyLevel:
+          proficiencyLevel != null
+              ? List.from(proficiencyLevel)
+              : this.proficiencyLevel,
       userCode: userCode ?? this.userCode,
       icon: icon ?? this.icon,
       background: background ?? this.background,

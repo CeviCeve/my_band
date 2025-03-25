@@ -1,21 +1,18 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_band/data/dto_pattern/models/local/group_model.dart';
+import 'package:my_band/data/dto_pattern/models/global_data.dart';
+import 'package:my_band/data/dto_pattern/models/local/proficiency_level_model.dart';
 import 'package:my_band/data/dto_pattern/models/local/user_model.dart';
 import 'package:my_band/data/servise/decoder.dart';
+import 'package:my_band/ui/activity/instruments/my_instruments_screen.dart';
 import 'package:my_band/ui/activity/my_contacts_screen.dart';
 import 'package:my_band/ui/activity/my_group_screen.dart';
-import 'package:my_band/ui/activity/my_instruments_screen.dart';
 import 'package:my_band/ui/element/custom/custom_button_large.dart';
 import 'package:my_band/ui/helper/anim_helper.dart';
 
 // Экран профиля пользователя
 class ProfileScreen extends StatefulWidget {
-  final User? user; // Модель пользователя, может быть null
-
-  const ProfileScreen({super.key, this.user});
+  const ProfileScreen({super.key});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -24,16 +21,11 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   final EnumDecoder decoder = EnumDecoder();
 
-  void t() {
-    log("true");
-    Navigator.pop(
-      context,
-      MaterialPageRoute(builder: (context) => Scaffold(appBar: AppBar())),
-    );
-  }
-
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContextContext) {
+    // Проверяем наличие текущего пользователя
+    final user = GlobalData.user;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -46,7 +38,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   height: 111,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/forest.png'),
+                      image: AssetImage(user.background ?? 'assets/forest.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -80,7 +72,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: CircleAvatar(
                     radius: 64,
                     backgroundColor: Colors.black,
-                    backgroundImage: AssetImage('assets/avatar.png'),
+                    backgroundImage: AssetImage(
+                      user.icon ?? 'assets/avatar.png',
+                    ),
                   ),
                 ),
                 // Кнопка редактирования
@@ -108,7 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${widget.user?.name ?? "ЭЭмма"} ${widget.user?.surname ?? "Уотсон"}",
+                        "${user.name} ${user.surname ?? ""}",
                         style: GoogleFonts.montserrat(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -116,8 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       Text(
-                        widget.user?.location?.getLocation ??
-                            "Неопознаная локация",
+                        user.location?.getLocation ?? "Неопознаная локация",
                         style: GoogleFonts.montserrat(
                           fontSize: 12,
                           color: Colors.grey[400],
@@ -133,13 +126,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       _buildInfoRow(
                         "Музыкальное образование:",
-                        widget.user?.education ?? "отсутствует",
+                        user.education ?? "отсутствует",
                       ),
-                      _buildInfoRow("Статус:", widget.user?.status ?? "-"),
-                      _buildInfoRow("Дата рождения:", "пока пусто"),
+                      _buildInfoRow("Статус:", user.status ?? "-"),
+                      _buildInfoRow("Дата рождения:", user.dob ?? "пока пусто"),
                       _buildInfoRow(
                         "Любимая группа:",
-                        widget.user?.likeBand ?? "Metallica",
+                        user.likeBand ?? "Metallica",
                       ),
                     ],
                   ),
@@ -167,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(16, 6, 16, 6),
                           child: Text(
-                            widget.user?.about ?? "...",
+                            user.about ?? "...",
                             style: GoogleFonts.montserrat(
                               fontSize: 12,
                               color: Colors.grey[400],
@@ -199,35 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         heigth: 20,
                         function:
                             () => AnimHelper.slideLefttoRight(
-                              MyGroupsScreen(
-                                user: User(
-                                  name: "имя",
-                                  password: "yghuji",
-                                  userCode: "",
-                                  email: 'emma.watson@example.com',
-                                  groups: [
-                                    Group(
-                                      name: 'SuperMegaDemons',
-                                      style: 'power-metal',
-                                      creatorId: 'emma.watson@example.com',
-                                      about: 'Cool band!',
-                                      users: ['emma.watson@example.com'],
-                                      icon: 'assets/my_band.png',
-                                    ),
-                                    Group(
-                                      name: 'SuperMegaDemons',
-                                      style: 'power-metal',
-                                      creatorId: 'other.user@example.com',
-                                      about: 'Another cool band!',
-                                      users: [
-                                        'other.user@example.com',
-                                        'emma.watson@example.com',
-                                      ],
-                                      icon: 'assets/my_band.png',
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              MyGroupsScreen(user: user),
                               context,
                             ),
                       ),
@@ -245,7 +210,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 // Карточка уровня владения инструментами
-                _buildProficiencyCard(),
+                _buildProficiencyCard(user),
               ],
             ),
           ],
@@ -255,7 +220,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Виджет карточки уровня владения инструментами
-  Widget _buildProficiencyCard() {
+  Widget _buildProficiencyCard(User user) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -275,19 +240,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           // Список инструментов и уровней
           ListView.builder(
-            shrinkWrap: true, // Уменьшает размер до содержимого
+            shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
-            itemCount: widget.user?.proficiencyLevel.length ?? 2,
+            itemCount: user.proficiencyLevel.length,
             itemBuilder: (context, index) {
-              final instrument =
-                  widget.user?.proficiencyLevel[index].instrument;
-              final level = widget.user?.proficiencyLevel[index].level;
-
+              final proficiency = user.proficiencyLevel[index];
               return _buildInfoRow(
-                decoder.instrumentDecoder(instrument) ?? "Ошибка",
-                decoder.proficiencyDecoder(level) ?? "Ошибка",
-                onTitleTap: () => showInstrumentPicker(index),
-                onValueTap: () => showProficiencyPicker(index),
+                decoder.instrumentDecoder(proficiency.instrument) ?? "Ошибка",
+                decoder.proficiencyDecoder(proficiency.level) ?? "Ошибка",
+                onTitleTap: () => showInstrumentPicker(index, user),
+                onValueTap: () => showProficiencyPicker(index, user),
               );
             },
           ),
@@ -295,7 +257,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Align(
             alignment: Alignment.center,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  user.proficiencyLevel.add(ProficiencyLevel());
+                });
+              },
               icon: const Icon(Icons.add, color: Colors.white),
             ),
           ),
@@ -339,7 +305,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Модальное окно выбора инструмента
-  void showInstrumentPicker(int index) {
+  void showInstrumentPicker(int index, User user) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -350,13 +316,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoder.instrumentMap.entries.map((entry) {
                   return ListTile(
                     title: Text(
-                      entry.value, // Название инструмента
+                      entry.value,
                       style: GoogleFonts.montserrat(fontSize: 14),
                     ),
                     onTap: () {
                       setState(() {
-                        widget.user?.proficiencyLevel[index].instrument =
-                            entry.key; // Установка значения
+                        user.proficiencyLevel[index].instrument = entry.key;
                       });
                       Navigator.pop(context);
                     },
@@ -369,7 +334,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   // Модальное окно выбора уровня владения
-  void showProficiencyPicker(int index) {
+  void showProficiencyPicker(int index, User user) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -380,13 +345,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 decoder.proficiencyMap.entries.map((entry) {
                   return ListTile(
                     title: Text(
-                      entry.value, // Название уровня
+                      entry.value,
                       style: GoogleFonts.montserrat(fontSize: 14),
                     ),
                     onTap: () {
                       setState(() {
-                        widget.user?.proficiencyLevel[index].level =
-                            entry.key; // Установка значения
+                        user.proficiencyLevel[index].level = entry.key;
                       });
                       Navigator.pop(context);
                     },
