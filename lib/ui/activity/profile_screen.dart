@@ -2,7 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_band/data/dto_pattern/models/web/user_model.dart';
+import 'package:my_band/data/dto_pattern/models/local/group_model.dart';
+import 'package:my_band/data/dto_pattern/models/local/user_model.dart';
 import 'package:my_band/data/servise/decoder.dart';
 import 'package:my_band/ui/activity/my_contacts_screen.dart';
 import 'package:my_band/ui/activity/my_group_screen.dart';
@@ -135,12 +136,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         widget.user?.education ?? "отсутствует",
                       ),
                       _buildInfoRow("Статус:", widget.user?.status ?? "-"),
-                      _buildInfoRow(
-                        "Дата рождения:",
-                        "${widget.user?.dob?.day != null ? "${widget.user?.dob?.day}." : "не"}"
-                            "${widget.user?.dob?.month != null ? "${widget.user?.dob?.month}." : " заполненное"}"
-                            "${widget.user?.dob?.year ?? " поле"}", // Исправлено: year вместо day
-                      ),
+                      _buildInfoRow("Дата рождения:", "пока пусто"),
                       _buildInfoRow(
                         "Любимая группа:",
                         widget.user?.likeBand ?? "Metallica",
@@ -203,7 +199,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         heigth: 20,
                         function:
                             () => AnimHelper.slideLefttoRight(
-                              MyGroupScreen(),
+                              MyGroupsScreen(
+                                user: User(
+                                  name: "имя",
+                                  password: "yghuji",
+                                  userCode: "",
+                                  email: 'emma.watson@example.com',
+                                  groups: [
+                                    Group(
+                                      name: 'SuperMegaDemons',
+                                      style: 'power-metal',
+                                      creatorId: 'emma.watson@example.com',
+                                      about: 'Cool band!',
+                                      users: ['emma.watson@example.com'],
+                                      icon: 'assets/my_band.png',
+                                    ),
+                                    Group(
+                                      name: 'SuperMegaDemons',
+                                      style: 'power-metal',
+                                      creatorId: 'other.user@example.com',
+                                      about: 'Another cool band!',
+                                      users: [
+                                        'other.user@example.com',
+                                        'emma.watson@example.com',
+                                      ],
+                                      icon: 'assets/my_band.png',
+                                    ),
+                                  ],
+                                ),
+                              ),
                               context,
                             ),
                       ),
