@@ -1,4 +1,4 @@
-import 'package:my_band/data/dto_pattern/models/web/contact_model.dart';
+import 'package:my_band/data/dto_pattern/models/local/contact_model.dart';
 
 class Group {
   List<String>? users;

@@ -3,15 +3,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:my_band/data/dto_pattern/models/local/contact_model.dart';
 import 'package:my_band/ui/element/custom/custom_blue_button.dart';
 
-class MyContactsScreen extends StatefulWidget {
+class ContactsScreen extends StatefulWidget {
   final List<Contact>? contacts;
-  const MyContactsScreen({super.key, this.contacts});
+  const ContactsScreen({super.key, this.contacts});
 
   @override
-  State<MyContactsScreen> createState() => _MyContactsScreen();
+  State<ContactsScreen> createState() => _ContactsScreenState();
 }
 
-class _MyContactsScreen extends State<MyContactsScreen> {
+class _ContactsScreenState extends State<ContactsScreen> {
   // Список контактов
   late List<Contact> contacts =
       widget.contacts ??

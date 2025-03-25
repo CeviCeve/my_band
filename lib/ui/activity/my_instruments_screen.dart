@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_band/ui/element/basic_instrument_card.dart';
 
 class MyInstrumentsScreen extends StatelessWidget {
   const MyInstrumentsScreen({super.key});
@@ -44,6 +45,16 @@ class MyInstrumentsScreen extends StatelessWidget {
             elevation: 0,
           ),
         ),
+      ),
+      body: Column(
+        children: [
+          BasicInstrumentCard(
+            imagePath: "assets/forest.png",
+            additionalInfo: "электрогитара",
+            name: "gibsol lespoul",
+            type: "hamdmade",
+          ),
+        ],
       ),
     );
   }
