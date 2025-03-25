@@ -23,10 +23,16 @@ class GroupDetailsScreen extends StatefulWidget {
 
 class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _groupNameController = TextEditingController();
+  final TextEditingController _groupStyleController = TextEditingController();
+  final TextEditingController _groupAboutController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
+    _groupNameController.dispose();
+    _groupStyleController.dispose();
+    _groupAboutController.dispose();
     super.dispose();
   }
 
@@ -39,15 +45,31 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
     });
   }
 
+  // Функция для удаления участника из группы
+  void _removeMemberFromGroup(String email) {
+    setState(() {
+      widget.group.users?.remove(email);
+    });
+  }
+
+  // Функция для редактирования данных группы
+  void _editGroup(String name, String style, String about) {
+    setState(() {
+      widget.group.name = name;
+      widget.group.style = style;
+      widget.group.about = about;
+    });
+  }
+
   // Диалоговое окно подтверждения
-  Future<bool?> _showConfirmationDialog(String action, String groupName) {
+  Future<bool?> _showConfirmationDialog(String action, String target) {
     return showDialog<bool>(
       context: context,
       builder: (context) {
         return AlertDialog(
           backgroundColor: const Color.fromARGB(255, 28, 28, 38),
           title: Text(
-            'Вы желаете $action из группы "$groupName"?',
+            'Вы желаете $action "$target"?',
             style: GoogleFonts.montserrat(fontSize: 16, color: Colors.white),
           ),
           actions: [
@@ -155,6 +177,150 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
     );
   }
 
+  // Модальное окно для редактирования данных группы
+  void _showEditGroupDialog() {
+    _groupNameController.text = widget.group.name ?? '';
+    _groupStyleController.text = widget.group.style ?? '';
+    _groupAboutController.text = widget.group.about ?? '';
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color.fromARGB(255, 28, 28, 38),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Редактировать группу',
+                style: GoogleFonts.montserrat(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _groupNameController,
+                style: GoogleFonts.montserrat(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Название группы',
+                  labelStyle: GoogleFonts.montserrat(
+                    color: const Color.fromARGB(255, 158, 158, 184),
+                  ),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 18, 18, 23),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: Color.fromARGB(255, 158, 158, 184),
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: Colors.blueAccent,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _groupStyleController,
+                style: GoogleFonts.montserrat(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Жанр',
+                  labelStyle: GoogleFonts.montserrat(
+                    color: const Color.fromARGB(255, 158, 158, 184),
+                  ),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 18, 18, 23),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: Color.fromARGB(255, 158, 158, 184),
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: Colors.blueAccent,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _groupAboutController,
+                style: GoogleFonts.montserrat(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Описание',
+                  labelStyle: GoogleFonts.montserrat(
+                    color: const Color.fromARGB(255, 158, 158, 184),
+                  ),
+                  filled: true,
+                  fillColor: const Color.fromARGB(255, 18, 18, 23),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: Color.fromARGB(255, 158, 158, 184),
+                      width: 1.0,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: const BorderSide(
+                      color: Colors.blueAccent,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                maxLines: 3,
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_groupNameController.text.isNotEmpty &&
+                        _groupStyleController.text.isNotEmpty) {
+                      _editGroup(
+                        _groupNameController.text,
+                        _groupStyleController.text,
+                        _groupAboutController.text,
+                      );
+                      Navigator.pop(context);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color.fromARGB(255, 21, 21, 184),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: Text(
+                    'Сохранить',
+                    style: GoogleFonts.montserrat(
+                      fontSize: 16,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isCreator = widget.group.creatorId == widget.user.email;
@@ -185,6 +351,14 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
             foregroundColor: Colors.white,
             elevation: 0,
             actions: [
+              if (isCreator)
+                IconButton(
+                  icon: const Icon(
+                    Icons.edit,
+                    color: Color.fromARGB(255, 158, 158, 184),
+                  ),
+                  onPressed: _showEditGroupDialog,
+                ),
               IconButton(
                 icon: Icon(
                   isCreator ? Icons.delete : Icons.close,
@@ -294,13 +468,56 @@ class _GroupDetailsScreenState extends State<GroupDetailsScreen> {
               ),
             ),
             const SizedBox(height: 8),
-            Text(
-              widget.group.users?.join(', ') ?? 'Нет участников',
-              style: GoogleFonts.montserrat(
-                fontSize: 14,
-                color: const Color.fromARGB(255, 158, 158, 184),
-              ),
-            ),
+            widget.group.users?.isEmpty ?? true
+                ? Text(
+                  'Нет участников',
+                  style: GoogleFonts.montserrat(
+                    fontSize: 14,
+                    color: const Color.fromARGB(255, 158, 158, 184),
+                  ),
+                )
+                : ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: widget.group.users?.length ?? 0,
+                  itemBuilder: (context, index) {
+                    final memberEmail = widget.group.users![index];
+                    final isCurrentUser = memberEmail == widget.user.email;
+
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            memberEmail,
+                            style: GoogleFonts.montserrat(
+                              fontSize: 14,
+                              color: const Color.fromARGB(255, 158, 158, 184),
+                            ),
+                          ),
+                          if (isCreator && !isCurrentUser)
+                            IconButton(
+                              icon: const Icon(
+                                Icons.remove_circle,
+                                color: Colors.red,
+                                size: 20,
+                              ),
+                              onPressed: () async {
+                                final confirm = await _showConfirmationDialog(
+                                  'удалить участника',
+                                  memberEmail,
+                                );
+                                if (confirm == true) {
+                                  _removeMemberFromGroup(memberEmail);
+                                }
+                              },
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
             const SizedBox(height: 24),
             // Кнопка добавления участника (только для создателя)
             if (isCreator)
