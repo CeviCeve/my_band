@@ -93,6 +93,7 @@ class _MyInstrumentsScreenState extends State<MyInstrumentsScreen> {
                 itemBuilder: (context, index) {
                   final instrument = instruments[index];
                   return BasicInstrumentCard(
+                    instrument: GlobalData.user.instruments[index],
                     imagePath:
                         instrument.instrumentPhoto?.isNotEmpty ?? false
                             ? instrument.instrumentPhoto!.first

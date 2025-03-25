@@ -75,7 +75,7 @@ class _InstrumentProfileScreenState extends State<InstrumentProfileScreen> {
           _manufacturerController.text.isNotEmpty
               ? _manufacturerController.text
               : null,
-      type: widget.instrument?.type ?? Instruments.accordion,
+      type: widget.instrument?.type ?? Instruments.grandPiano,
       possessionTime:
           _possessionTimeController.text.isNotEmpty
               ? _possessionTimeController.text
@@ -97,10 +97,14 @@ class _InstrumentProfileScreenState extends State<InstrumentProfileScreen> {
         }
       } else {
         // Иначе добавляем новый инструмент в список TODO:
-        widget.user.instruments;
+        newInstrument.about = _descriptionController.text;
+        newInstrument.type = _selectedType!;
+        newInstrument.possessionTime = _possessionTimeController.text;
+        newInstrument.proficiencyLevel = _selectedProficiency!;
         //widget.user.instruments.add(newInstrument);
-        GlobalData.user.copyWith(instruments: [newInstrument]);
-        log(newInstrument.name.toString());
+        GlobalData.user.instruments.add(newInstrument);
+
+        log(newInstrument.type.toString());
         log(GlobalData.user.instruments.toString());
       }
     });

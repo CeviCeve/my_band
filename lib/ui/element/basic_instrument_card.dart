@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_band/data/dto_pattern/models/local/group_model.dart';
+import 'package:my_band/data/dto_pattern/models/global_data.dart';
 import 'package:my_band/data/dto_pattern/models/local/instrument_model.dart';
-import 'package:my_band/data/dto_pattern/models/local/user_model.dart';
 import 'package:my_band/ui/activity/instruments/instruments_profile_screen.dart';
 import 'package:my_band/ui/helper/anim_helper.dart';
 
@@ -11,6 +10,7 @@ class BasicInstrumentCard extends StatelessWidget {
   final String name;
   final String type;
   final String additionalInfo;
+  final Instrument instrument;
 
   const BasicInstrumentCard({
     super.key,
@@ -18,6 +18,7 @@ class BasicInstrumentCard extends StatelessWidget {
     required this.name,
     required this.type,
     required this.additionalInfo,
+    required this.instrument,
   });
 
   @override
@@ -28,34 +29,8 @@ class BasicInstrumentCard extends StatelessWidget {
         onTap:
             () => AnimHelper.slideBottomToTop(
               InstrumentProfileScreen(
-                user: User(
-                  name: "имя",
-                  password: "yghuji",
-                  userCode: "",
-                  email: 'emma.watson@example.com',
-                  instruments: [Instrument(name: "SuperStrat")],
-                  groups: [
-                    Group(
-                      name: 'SuperMegaDemons',
-                      style: 'power-metal',
-                      creatorId: 'emma.watson@example.com',
-                      about: 'Cool band!',
-                      users: ['emma.watson@example.com'],
-                      icon: 'assets/my_band.png',
-                    ),
-                    Group(
-                      name: 'SuperMegaDemons',
-                      style: 'power-metal',
-                      creatorId: 'other.user@example.com',
-                      about: 'Another cool band!',
-                      users: [
-                        'other.user@example.com',
-                        'emma.watson@example.com',
-                      ],
-                      icon: 'assets/my_band.png',
-                    ),
-                  ],
-                ),
+                user: GlobalData.user,
+                instrument: instrument,
               ),
               context,
             ),

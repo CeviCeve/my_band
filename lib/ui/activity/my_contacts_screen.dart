@@ -1,43 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:my_band/data/dto_pattern/models/global_data.dart';
 import 'package:my_band/data/dto_pattern/models/local/contact_model.dart';
 import 'package:my_band/ui/element/custom/custom_blue_button.dart';
 
 class MyContactsScreen extends StatefulWidget {
-  final List<Contact>? contacts;
-  const MyContactsScreen({super.key, this.contacts});
+  const MyContactsScreen({super.key});
 
   @override
   State<MyContactsScreen> createState() => _MyContactsScreen();
 }
 
 class _MyContactsScreen extends State<MyContactsScreen> {
-  // Список контактов
-  late List<Contact> contacts =
-      widget.contacts ??
-      [
-        Contact(
-          name: 'Telegram',
-          inside: 'Обязательно к заполнению',
-          visibility: true,
-        ),
-        Contact(
-          name: 'Instagram',
-          inside: 'Обязательно к заполнению',
-          visibility: true,
-        ),
-        Contact(
-          name: 'VK',
-          inside: 'Обязательно к заполнению',
-          visibility: true,
-        ),
-        Contact(
-          name: 'Телефон',
-          inside: 'Обязательно к заполнению',
-          visibility: true,
-        ),
-      ];
-
   // Контроллеры для нового/редактируемого контакта
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _valueController = TextEditingController();
@@ -52,23 +26,29 @@ class _MyContactsScreen extends State<MyContactsScreen> {
   // Функция для изменения видимости контакта
   void _toggleVisibility(int index) {
     setState(() {
-      contacts[index] = contacts[index].copyWith(
-        visibility: !(contacts[index].visibility ?? true),
+      final updatedContact = GlobalData.user.contacts[index].copyWith(
+        visibility: !(GlobalData.user.contacts[index].visibility ?? true),
       );
+      GlobalData.user.contacts[index] = updatedContact;
     });
   }
 
   // Функция для добавления нового контакта
   void _addContact(String name, String value) {
     setState(() {
-      contacts.add(Contact(name: name, inside: value, visibility: true));
+      final newContact = Contact(name: name, inside: value, visibility: true);
+      GlobalData.user.contacts.add(newContact);
     });
   }
 
   // Функция для редактирования существующего контакта
   void _editContact(int index, String name, String value) {
     setState(() {
-      contacts[index] = contacts[index].copyWith(name: name, inside: value);
+      final updatedContact = GlobalData.user.contacts[index].copyWith(
+        name: name,
+        inside: value,
+      );
+      GlobalData.user.contacts[index] = updatedContact;
     });
   }
 
@@ -84,10 +64,9 @@ class _MyContactsScreen extends State<MyContactsScreen> {
 
   // Отображение модального окна для редактирования контакта
   void _showEditContactDialog(int index) {
-    // Предзаполняем поля текущими значениями
-    _nameController.text = contacts[index].name ?? '';
-    _valueController.text = contacts[index].inside ?? '';
-
+    final contact = GlobalData.user.contacts[index];
+    _nameController.text = contact.name ?? '';
+    _valueController.text = contact.inside ?? '';
     _showContactDialog(
       title: 'Редактировать контакт',
       onSubmit: (name, value) => _editContact(index, name, value),
@@ -101,7 +80,7 @@ class _MyContactsScreen extends State<MyContactsScreen> {
   }) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: const Color.fromARGB(255, 28, 28, 38), // Тёмный фон
+      backgroundColor: const Color.fromARGB(255, 28, 28, 38),
       builder: (context) {
         return Padding(
           padding: const EdgeInsets.all(16.0),
@@ -118,7 +97,6 @@ class _MyContactsScreen extends State<MyContactsScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Поле для названия контакта
               TextField(
                 controller: _nameController,
                 style: GoogleFonts.montserrat(color: Colors.white),
@@ -146,7 +124,6 @@ class _MyContactsScreen extends State<MyContactsScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              // Поле для значения контакта
               TextField(
                 controller: _valueController,
                 style: GoogleFonts.montserrat(color: Colors.white),
@@ -174,7 +151,6 @@ class _MyContactsScreen extends State<MyContactsScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              // Кнопка "Создать" или "Сохранить"
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -212,8 +188,11 @@ class _MyContactsScreen extends State<MyContactsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Проверяем, есть ли текущий пользователь
+    final contacts = GlobalData.user.contacts;
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 18, 18, 23), // Тёмный фон
+      backgroundColor: const Color.fromARGB(255, 18, 18, 23),
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Container(
@@ -242,10 +221,9 @@ class _MyContactsScreen extends State<MyContactsScreen> {
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16.0),
-        itemCount: contacts.length + 1, // +1 для кнопки "Создать"
+        itemCount: contacts.length + 1,
         itemBuilder: (context, index) {
           if (index == contacts.length) {
-            // Кнопка "Создать"
             return Padding(
               padding: const EdgeInsets.only(top: 16.0),
               child: CustomBlueButton(
@@ -261,16 +239,12 @@ class _MyContactsScreen extends State<MyContactsScreen> {
           final contact = contacts[index];
 
           return GestureDetector(
-            onLongPress:
-                () => _showEditContactDialog(
-                  index,
-                ), // Долгое нажатие для редактирования
+            onLongPress: () => _showEditContactDialog(index),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // Название и значение контакта
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -291,7 +265,6 @@ class _MyContactsScreen extends State<MyContactsScreen> {
                       ),
                     ],
                   ),
-                  // Иконка "глазика" для изменения видимости
                   IconButton(
                     onPressed: () => _toggleVisibility(index),
                     icon: Icon(
